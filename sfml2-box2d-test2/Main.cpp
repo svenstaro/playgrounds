@@ -30,10 +30,6 @@ int main(int argc, char** argv)
 	B2_NOT_USED(argc);
 	B2_NOT_USED(argv);
 
-	//redirect cerr to a file
-	ofstream errorFile("ErrorLog.txt");
-	cerr.rdbuf(errorFile.rdbuf());
-
 	int result = EXIT_SUCCESS;
 
 	try
