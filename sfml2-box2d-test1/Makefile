@@ -1,2 +1,2 @@
 default:
-	g++ -lsfml-graphics -lsfml-window -lsfml-system -lBox2D *.cpp -otest1
+	g++ -lsfml2-graphics -lsfml2-window -lsfml2-system -lBox2D *.cpp -otest1

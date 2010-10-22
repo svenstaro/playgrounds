@@ -53,7 +53,7 @@ protected:
 	/*game/demo variables*/
 
 	//instruction/help message strings
-	sf::String str1, str2, str3, str4;
+	sf::Text str1, str2, str3, str4;
 	//the main Box2D body that moves with user input
 	b2Body *body;
 	//keep track of the small bodies for later use

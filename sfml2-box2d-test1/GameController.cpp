@@ -196,17 +196,17 @@ void GameController::OnInit()
 	}
 
 	//control instructions as SFML strings to draw onto the window
-	str1.SetText("arrows = move box");
-	str1.SetSize(18.0f);
+	str1.SetString("arrows = move box");
+	str1.SetCharacterSize(18.0f);
 	str1.SetPosition(10, 10);
-	str2.SetText("[ ] = rotate box");
-	str2.SetSize(18.0f);
+	str2.SetString("[ ] = rotate box");
+	str2.SetCharacterSize(18.0f);
 	str2.SetPosition(10, 30);
-	str3.SetText("space = random crazy forces");
-	str3.SetSize(18.0f);
+	str3.SetString("space = random crazy forces");
+	str3.SetCharacterSize(18.0f);
 	str3.SetPosition(10, 50);
-	str4.SetText("w s a d = change gravity");
-	str4.SetSize(18.0f);
+	str4.SetString("w s a d = change gravity");
+	str4.SetCharacterSize(18.0f);
 	str4.SetPosition(10, 70);
 }
 
