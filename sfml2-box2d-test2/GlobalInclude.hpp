@@ -21,7 +21,8 @@
   Allen Jordan allen.jordan@gmail.com
 */
 
-#pragma once
+#ifndef GLOBALINCLUDE_HPP
+#define GLOBALINCLUDE_HPP
 
 #include <stdexcept>
 #include <iostream>
@@ -43,3 +44,5 @@ using namespace std;
 //shorthand version
 #define PPM PIXELS_PER_METER
 #define MPP METERS_PER_PIXEL
+
+#endif

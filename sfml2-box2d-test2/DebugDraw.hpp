@@ -21,7 +21,8 @@
   Allen Jordan allen.jordan@gmail.com
 */
 
-#pragma once
+#ifndef DEBUGDRAW_HPP
+#define DEBUGDRAW_HPP
 
 #include "GlobalInclude.hpp"
 
@@ -42,3 +43,5 @@ private:
 
 	sf::Color B2SFColor(const b2Color &color);
 };
+
+#endif

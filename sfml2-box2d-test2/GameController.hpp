@@ -21,7 +21,8 @@
   Allen Jordan allen.jordan@gmail.com
 */
 
-#pragma once
+#ifndef GAMECONTROLLER_HPP
+#define GAMECONTROLLER_HPP
 
 #include "GlobalInclude.hpp"
 #include "DebugDraw.hpp"
@@ -67,3 +68,5 @@ protected:
 	void OnRender();
 	void OnCleanup();
 };
+
+#endif
