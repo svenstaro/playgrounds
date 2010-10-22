@@ -21,7 +21,7 @@
   Allen Jordan allen.jordan@gmail.com
 */
 
-#include "GameController.h"
+#include "GameController.hpp"
 
 //use the constructor to initialize class constants, etc
 GameController::GameController() : 

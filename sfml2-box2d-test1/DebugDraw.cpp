@@ -21,7 +21,7 @@
   Allen Jordan allen.jordan@gmail.com
 */
 
-#include "DebugDraw.h"
+#include "DebugDraw.hpp"
 
 DebugDraw::DebugDraw(sf::RenderWindow *renderWindow)
 {

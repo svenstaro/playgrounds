@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include "GlobalInclude.h"
-#include "DebugDraw.h"
+#include "GlobalInclude.hpp"
+#include "DebugDraw.hpp"
 
 class GameController
 {

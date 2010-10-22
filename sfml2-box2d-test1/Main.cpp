@@ -21,8 +21,8 @@
   Allen Jordan allen.jordan@gmail.com
 */
 
-#include "GlobalInclude.h"
-#include "GameController.h"
+#include "GlobalInclude.hpp"
+#include "GameController.hpp"
 
 //main entry point to the program
 int main(int argc, char** argv)

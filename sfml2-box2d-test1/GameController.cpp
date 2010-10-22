@@ -21,7 +21,7 @@
   Allen Jordan allen.jordan@gmail.com
 */
 
-#include "GameController.h"
+#include "GameController.hpp"
 
 GameController::GameController() : 
 	timeStep(1.0f/60.0f), 

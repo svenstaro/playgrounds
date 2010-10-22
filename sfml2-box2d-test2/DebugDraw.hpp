@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "GlobalInclude.h"
+#include "GlobalInclude.hpp"
 
 //a Box2D debug drawing class for simple rendering of physics objects
 class DebugDraw : public b2DebugDraw
