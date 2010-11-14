@@ -43,9 +43,12 @@ protected:
 	sf::RenderWindow *window;
 
 	/*Bullet setup variables*/
-
-	//the main physics world
-	btDiscreteDynamicsWorld* dynamics_world;
+	//keep the collision shapes, for deletion/cleanup
+	btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
+	btBroadphaseInterface*	m_broadphase;
+	btCollisionDispatcher*	m_dispatcher;
+	btConstraintSolver*	m_solver;
+	btDefaultCollisionConfiguration* m_collisionConfiguration;
 
 	//constants needed for stepping the physics simulation
 	const float timeStep; //note: values for constants are set in the constructor's initialization list

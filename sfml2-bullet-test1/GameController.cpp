@@ -62,18 +62,30 @@ void GameController::OnInit() {
 	width = (float)window->GetWidth();
 	height = (float)window->GetHeight();
 
-	// bullet broadphase algorithm for collision checks
-	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-
 	// bullet collsion dispatcher
-	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	m_collisionConfiguration = new btDefaultCollisionConfiguration();
+	m_dispatcher = new	btCollisionDispatcher(m_collisionConfiguration);
 
 	// bullet simulation solver
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+	btVoronoiSimplexSolver* simplex = new btVoronoiSimplexSolver();
+	btMinkowskiPenetrationDepthSolver* pdSolver = new btMinkowskiPenetrationDepthSolver();
+
+	btConvex2dConvex2dAlgorithm::CreateFunc* convexAlgo2d = new btConvex2dConvex2dAlgorithm::CreateFunc(simplex, pdSolver);
+
+	dispatcher->registerCollisionCreateFunc(CONVEX_2D_SHAPE_PROXYTYPE,CONVEX_2D_SHAPE_PROXYTYPE, convexAlgo2d);
+	dispatcher->registerCollisionCreateFunc(BOX_2D_SHAPE_PROXYTYPE,CONVEX_2D_SHAPE_PROXYTYPE, convexAlgo2d);
+	dispatcher->registerCollisionCreateFunc(CONVEX_2D_SHAPE_PROXYTYPE,BOX_2D_SHAPE_PROXYTYPE, convexAlgo2d);
+	dispatcher->registerCollisionCreateFunc(BOX_2D_SHAPE_PROXYTYPE,BOX_2D_SHAPE_PROXYTYPE, new btBox2dBox2dCollisionAlgorithm::CreateFunc());
+
+	// bullet broadphase algorithm for collision checks
+	m_broadphase = new btDbvtBroadphase();
+
+	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
+	btSequentialImpulseConstraintSolver* sol = new btSequentialImpulseConstraintSolver;
+	m_solver = sol;
 
 	// bullet world
-	dynamics_world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 
 	// bullet gravity
 	dynamics_world->setGravity(btVector3(0,-10,0));

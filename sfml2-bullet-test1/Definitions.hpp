@@ -1,0 +1,7 @@
+#ifndef DEFINITIONS_HPP
+#define DEFINITIONS_HPP
+
+#define PIXELS_PER_METER	64.0f
+#define METERS_PER_PIXEL	(1.0f/PIXELS_PER_METER)
+
+#endif

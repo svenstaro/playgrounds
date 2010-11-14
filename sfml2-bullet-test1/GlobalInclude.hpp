@@ -32,6 +32,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <bullet/btBulletDynamicsCommon.h>
+#include <BulletCollision/CollisionShapes/btBox2dShape.h>
+#include <BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.h>
+#include <BulletCollision/CollisionDispatch/btBox2dBox2dCollisionAlgorithm.h>
+#include <BulletCollision/CollisionDispatch/btConvex2dConvex2dAlgorithm.h>
+#include <BulletCollision/CollisionShapes/btConvex2dShape.h>
+#include <BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h>
 #include <boost/foreach.hpp>
 
 using namespace std;
