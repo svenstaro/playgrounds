@@ -1,9 +1,9 @@
 #include "DebugDraw.hpp"
 #include "Definitions.hpp"
 
-DebugDraw::DebugDraw(sf::RenderWindow* renderWindow)
+DebugDraw::DebugDraw(sf::RenderWindow* renderwindow)
 {
-	window = renderWindow;
+	window = renderwindow;
 }
 
 const sf::Color DebugDraw::BtToSfColor(const btVector3& color) const {
