@@ -1,2 +1,2 @@
 default:
-	g++ -Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system -lBox2D *.cpp -obox2d-test2
+	g++ -Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system -lBox2D *.cpp -obox2d-test2.bin
