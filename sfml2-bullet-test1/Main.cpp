@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
-/// This is a Hello World program for running a basic Bullet physics simulation
-
 int main(int argc, char** argv) {
 	sf::RenderWindow* RenderWin = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT, 32), "lol test");
 	RenderWin->UseVerticalSync(true);
@@ -73,35 +71,34 @@ int main(int argc, char** argv) {
 	// Add the body to the dynamics world.
 	dynamicsWorld->addRigidBody(topwall_body);
 
-	{
-		//create a dynamic rigidbody
 
-		//btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
-		btCollisionShape* colShape = new btSphereShape(btScalar(1.));
-		collisionShapes.push_back(colShape);
+	// Creare dynamic rigid body.
 
-		/// Create Dynamic Objects
-		btTransform startTransform;
-		startTransform.setIdentity();
+	//btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
+	btCollisionShape* colShape = new btSphereShape(btScalar(1.));
+	collisionShapes.push_back(colShape);
 
-		btScalar	mass(1.f);
+	/// Create Dynamic Objects
+	btTransform startTransform;
+	startTransform.setIdentity();
 
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = (mass != 0.f);
+	btScalar mass(1.f);
 
-		btVector3 localInertia(0, 0, 0);
-		if (isDynamic)
-			colShape->calculateLocalInertia(mass,localInertia);
+	//rigidbody is dynamic if and only if mass is non zero, otherwise static
+	bool isDynamic = (mass != 0.f);
 
-			startTransform.setOrigin(btVector3(5, 5, 0));
-		
-			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-			btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-			btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState,colShape,localInertia);
-			btRigidBody* body = new btRigidBody(rbInfo);
+	btVector3 localInertia(0, 0, 0);
+	if (isDynamic)
+		colShape->calculateLocalInertia(mass,localInertia);
 
-			dynamicsWorld->addRigidBody(body);
-	}
+	startTransform.setOrigin(btVector3(5, 5, 0));
+
+	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState,colShape,localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	dynamicsWorld->addRigidBody(body);
 
 /// Do some simulation
 
