@@ -32,14 +32,18 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
 	window->Draw(line);
 }
 
-/*
-   void DebugDraw::drawSphere(btScalar radius, const btTransform& transform, const btVector3& color) {
-   sf::Shape sphere = sf::Shape::Circle(transform.getOrigin.x, transform.getOrigin.y, radius, BtToSfColor(color));
-   }
+void DebugDraw::drawSphere(btScalar radius, const btTransform& transform, const btVector3& color) {
+	sf::Shape sphere = sf::Shape::Circle(transform.getOrigin().x() * PIXELS_PER_METER, transform.getOrigin().y() * PIXELS_PER_METER, radius * PIXELS_PER_METER, BtToSfColor(color), 1.f);
+	sphere.EnableFill(false);
+	sphere.EnableOutline(true);
+	window->Draw(sphere);
+}
 
-   void DebugDraw::drawSphere(const btVector3& p, btScalar radius, const btVector3& color) {
-   sf::Shape sphere = sf::Shape::Circle(p.x, p.y, radius, BtToSfColor(color));
-   }
+void DebugDraw::drawSphere(const btVector3& p, btScalar radius, const btVector3& color) {
+	sf::Shape sphere = sf::Shape::Circle(p.x(), p.y(), radius, BtToSfColor(color));
+	window->Draw(sphere);
+}
+/*
 
    void DebugDraw::drawTriangle(const btVector3& v0, const btVector3& v1, const btVector3& v2, const btVector3&, const btVector3 &, const btVector3 &, const btVector3 &color, btScalar alpha) {
    }
@@ -65,7 +69,7 @@ void DebugDraw::draw3dText(const btVector3& location, const char* text_string) {
 	sf::String string(text_string);
 	sf::Text text(string);
 	text.SetPosition(location.x() * PIXELS_PER_METER,
-					 location.y() * PIXELS_PER_METER);
+			location.y() * PIXELS_PER_METER);
 	window->Draw(text);
 }
 

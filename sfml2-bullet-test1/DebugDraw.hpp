@@ -14,8 +14,9 @@ public:
 
 	void drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color);
 	void drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &fromColor, const btVector3 &toColor);
-	/*void drawSphere(btScalar radius, const btTransform &transform, const btVector3 &color);
+	void drawSphere(btScalar radius, const btTransform &transform, const btVector3 &color);
 	void drawSphere(const btVector3 &p, btScalar radius, const btVector3 &color);
+	/*
 	void drawTriangle(const btVector3 &v0, const btVector3 &v1, const btVector3 &v2, const btVector3 &, const btVector3 &, const btVector3 &, const btVector3 &color, btScalar alpha);
 	void drawTriangle(const btVector3 &v0, const btVector3 &v1, const btVector3 &v2, const btVector3 &color, btScalar);*/
 	void drawContactPoint(const btVector3& point_on_b, const btVector3& normal_on_b, btScalar distance, int life_time, const btVector3& color);
