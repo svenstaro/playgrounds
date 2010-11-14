@@ -1,2 +1,2 @@
 default:
-	g++ -Wall -Wextra -lsfml2-graphics -lsfml2-window -lsfml2-system -I/usr/include/bullet -lBulletCollision -lBulletDynamics *.cpp -obullet-test1
+	g++ -Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system -I/usr/include/bullet -lBulletCollision -lBulletDynamics DebugDraw.cpp Main.cpp -obullet-test1
