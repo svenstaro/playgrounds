@@ -1,66 +1,77 @@
 #include "btBulletDynamicsCommon.h"
 #include "DebugDraw.hpp"
+#include "Definitions.hpp"
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
 /// This is a Hello World program for running a basic Bullet physics simulation
 
 int main(int argc, char** argv) {
-	sf::RenderWindow* RenderWin = new sf::RenderWindow(sf::VideoMode(800, 600, 32), "lol test");
+	sf::RenderWindow* RenderWin = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT, 32), "lol test");
+	RenderWin->UseVerticalSync(true);
 
-	///collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
+	// Collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
 	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
 
-	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
+	// Use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded).
 	btCollisionDispatcher* dispatcher = new	btCollisionDispatcher(collisionConfiguration);
 
-	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
+	// btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
 	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
 
-	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
+	// The default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded).
 	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
+	// Set gravity to 9.8m/s² along y-axis.
 	dynamicsWorld->setGravity(btVector3(0, 1, 0));
 
+	// Get us some debug output. Without this, we'd see nothing at all.
 	DebugDraw* debugDraw = new DebugDraw(RenderWin);
 	debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	//debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	dynamicsWorld->setDebugDrawer(debugDraw);
 
-	///create a few basic rigid bodies
-	btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(10.f), btScalar(0.5), btScalar(0)));
-
-	//keep track of the shapes, we release memory at exit.
-	//make sure to re-use collision shapes among rigid bodies whenever possible!
+	// Keep track of the shapes, we release memory at exit.
+	// Make sure to re-use collision shapes among rigid bodies whenever possible!
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
+	// Create a ground body.
+	btScalar thickness(0.2);
+	btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(WIDTH / 2 * METERS_PER_PIXEL), thickness, btScalar(0)));
 	collisionShapes.push_back(groundShape);
+	btTransform groundTransform(btQuaternion(0, 0, 0, 1), btVector3(WIDTH / 2 * METERS_PER_PIXEL, HEIGHT * METERS_PER_PIXEL, 0));
+	// Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects.
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(groundTransform);
+	btRigidBody::btRigidBodyConstructionInfo ground_rbInfo(0, groundMotionState, groundShape, btVector3(0, 0, 0));
+	btRigidBody* ground_body = new btRigidBody(ground_rbInfo);
+	// Add the body to the dynamics world.
+	dynamicsWorld->addRigidBody(ground_body);
 
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(btVector3(0, 10, 0));
+	// Create left wall.
+	btTransform leftWallTransform(btQuaternion(0, 0, 1, 1), btVector3(0, HEIGHT / 2 * METERS_PER_PIXEL, 0));
+	btDefaultMotionState* leftWallMotionState = new btDefaultMotionState(leftWallTransform);
+	btRigidBody::btRigidBodyConstructionInfo leftWall_rbInfo(0, leftWallMotionState, groundShape, btVector3(0, 0, 0));
+	btRigidBody* leftwall_body = new btRigidBody(leftWall_rbInfo);
+	// Add the body to the dynamics world.
+	dynamicsWorld->addRigidBody(leftwall_body);
 
-	{
-		btScalar mass(0.);
+	// Create right wall.
+	btTransform rightWallTransform(btQuaternion(0, 0, 1, 1), btVector3(WIDTH * METERS_PER_PIXEL, HEIGHT / 2 * METERS_PER_PIXEL, 0));
+	btDefaultMotionState* rightWallMotionState = new btDefaultMotionState(rightWallTransform);
+	btRigidBody::btRigidBodyConstructionInfo rightWall_rbInfo(0, rightWallMotionState, groundShape, btVector3(0, 0, 0));
+	btRigidBody* rightwall_body = new btRigidBody(rightWall_rbInfo);
+	// Add the body to the dynamics world.
+	dynamicsWorld->addRigidBody(rightwall_body);
 
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = (mass != 0.f);
-
-		btVector3 localInertia(0, 0, 0);
-		if (isDynamic)
-			groundShape->calculateLocalInertia(mass,localInertia);
-
-		//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-		btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState,groundShape,localInertia);
-		btRigidBody* body = new btRigidBody(rbInfo);
-
-		//add the body to the dynamics world
-		dynamicsWorld->addRigidBody(body);
-	}
-
+	// Create ceiling
+	btTransform topWallTransform(btQuaternion(0, 0, 0, 1), btVector3(WIDTH / 2 * METERS_PER_PIXEL, 0, 0));
+	btDefaultMotionState* topWallMotionState = new btDefaultMotionState(topWallTransform);
+	btRigidBody::btRigidBodyConstructionInfo topWall_rbInfo(0, topWallMotionState, groundShape, btVector3(0, 0, 0));
+	btRigidBody* topwall_body = new btRigidBody(topWall_rbInfo);
+	// Add the body to the dynamics world.
+	dynamicsWorld->addRigidBody(topwall_body);
 
 	{
 		//create a dynamic rigidbody
@@ -82,7 +93,7 @@ int main(int argc, char** argv) {
 		if (isDynamic)
 			colShape->calculateLocalInertia(mass,localInertia);
 
-			startTransform.setOrigin(btVector3(5, 0, 0));
+			startTransform.setOrigin(btVector3(5, 5, 0));
 		
 			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 			btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
