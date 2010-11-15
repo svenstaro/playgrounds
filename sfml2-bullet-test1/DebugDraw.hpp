@@ -33,7 +33,7 @@ public:
 
 private:
 	int mDebugMode;
-	sf::RenderWindow *window;
+	sf::RenderWindow* window;
 };
 
 #endif
