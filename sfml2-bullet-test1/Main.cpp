@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
         if (isDynamic)
                 colShape->calculateLocalInertia(mass,localInertia);
 
-        startTransform.setOrigin(btVector3(5, 5, 0));
+        startTransform.setOrigin(btVector3(2, 5, 0));
 
         //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 		boost::shared_ptr<btDefaultMotionState> myMotionState(new btDefaultMotionState(startTransform));
@@ -128,7 +128,13 @@ int main(int argc, char** argv) {
 		boost::ptr_list<btDefaultMotionState> motionstate_list;
 		boost::ptr_list<btCollisionShape> colshape_list;
 		for (int i=0;i <= 10; ++i) {
-			colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f,0.8f))));
+			if (i < 5)
+				colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f,0.8f))));
+			else
+				colshape_list.push_back(new btBoxShape(btVector3(sf::Randomizer::Random(0.1f,0.8f),sf::Randomizer::Random(0.1f,0.8f),0)));
+			if (isDynamic)
+                colshape_list.back().calculateLocalInertia(mass,localInertia);
+			collisionShapes.push_back(&(colshape_list.back()));
 			startTransform.setIdentity();
 			startTransform.setOrigin(btVector3(i,i,0));
 			motionstate_list.push_back(new btDefaultMotionState(startTransform));
