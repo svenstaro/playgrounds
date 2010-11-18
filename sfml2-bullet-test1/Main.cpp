@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 
         // Create a ground body.
         btScalar thickness(0.2);
-		boost::shared_ptr<btCollisionShape> groundShape(new btBoxShape(btVector3(btScalar(WIDTH / 2 * METERS_PER_PIXEL), thickness, btScalar(0))));
+		boost::shared_ptr<btCollisionShape> groundShape(new btBoxShape(btVector3(btScalar(WIDTH / 2 * METERS_PER_PIXEL), thickness, btScalar(10))));
         collisionShapes.push_back(groundShape.get());
         btTransform groundTransform(btQuaternion(0, 0, 0, 1), btVector3(WIDTH / 2 * METERS_PER_PIXEL, HEIGHT * METERS_PER_PIXEL, 0));
         // Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects.
@@ -129,9 +129,9 @@ int main(int argc, char** argv) {
 		boost::ptr_list<btCollisionShape> colshape_list;
 		for (int i=0;i <= 10; ++i) {
 			if (i < 5)
-				colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f,0.8f))));
+				colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f, 0.8f))));
 			else
-				colshape_list.push_back(new btBoxShape(btVector3(sf::Randomizer::Random(0.1f,0.8f),sf::Randomizer::Random(0.1f,0.8f),0)));
+				colshape_list.push_back(new btBoxShape(btVector3(sf::Randomizer::Random(0.1f,0.8f), sf::Randomizer::Random(0.1f,0.8f), 10)));
 			if (isDynamic)
                 colshape_list.back().calculateLocalInertia(mass,localInertia);
 			collisionShapes.push_back(&(colshape_list.back()));
