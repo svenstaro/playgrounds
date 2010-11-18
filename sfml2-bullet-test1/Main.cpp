@@ -126,11 +126,13 @@ int main(int argc, char** argv) {
 		// Create lulz
 		boost::ptr_list<btRigidBody> body_list;
 		boost::ptr_list<btDefaultMotionState> motionstate_list;
+		boost::ptr_list<btCollisionShape> colshape_list;
 		for (int i=0;i <= 10; ++i) {
+			colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f,0.8f))));
 			startTransform.setIdentity();
 			startTransform.setOrigin(btVector3(i,i,0));
 			motionstate_list.push_back(new btDefaultMotionState(startTransform));
-			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass,&(motionstate_list.back()),colShape.get(),localInertia));
+			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass,&(motionstate_list.back()),&(colshape_list.back()),localInertia));
 			lol->setLinearFactor(btVector3(1,1,0));
 			lol->setAngularFactor(btVector3(0,0,1));
             body_list.push_back(lol);
