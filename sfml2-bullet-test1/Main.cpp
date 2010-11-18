@@ -16,12 +16,22 @@ int main(int argc, char** argv) {
 		boost::shared_ptr<btCollisionDispatcher> dispatcher(new btCollisionDispatcher(collisionConfiguration.get()));
 
         // btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
-		boost::shared_ptr<btBroadphaseInterface> overlappingPairCache(new btDbvtBroadphase());
+		boost::shared_ptr<btBroadphaseInterface> broadphase(new btDbvtBroadphase());
 
         // The default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded).
+
+		boost::shared_ptr<btVoronoiSimplexSolver> simplex(new btVoronoiSimplexSolver());
+		boost::shared_ptr<btMinkowskiPenetrationDepthSolver> pd_solver(new btMinkowskiPenetrationDepthSolver());
 		boost::shared_ptr<btSequentialImpulseConstraintSolver> solver(new btSequentialImpulseConstraintSolver());
 
-		boost::shared_ptr<btDiscreteDynamicsWorld> dynamicsWorld(new btDiscreteDynamicsWorld(dispatcher.get(), overlappingPairCache.get(), solver.get(), collisionConfiguration.get()));
+		boost::shared_ptr<btDiscreteDynamicsWorld> dynamicsWorld(new btDiscreteDynamicsWorld(dispatcher.get(), broadphase.get(), solver.get(), collisionConfiguration.get()));
+
+		boost::shared_ptr<btConvex2dConvex2dAlgorithm::CreateFunc> convex_algo_2d(new btConvex2dConvex2dAlgorithm::CreateFunc(simplex.get(),pd_solver.get()));
+		
+		dispatcher->registerCollisionCreateFunc(CONVEX_2D_SHAPE_PROXYTYPE,CONVEX_2D_SHAPE_PROXYTYPE, convex_algo_2d.get());
+		dispatcher->registerCollisionCreateFunc(BOX_2D_SHAPE_PROXYTYPE,CONVEX_2D_SHAPE_PROXYTYPE, convex_algo_2d.get());
+		dispatcher->registerCollisionCreateFunc(CONVEX_2D_SHAPE_PROXYTYPE,BOX_2D_SHAPE_PROXYTYPE, convex_algo_2d.get());
+		dispatcher->registerCollisionCreateFunc(BOX_2D_SHAPE_PROXYTYPE,BOX_2D_SHAPE_PROXYTYPE, new btBox2dBox2dCollisionAlgorithm::CreateFunc());
 
         // Set gravity to 9.8m/s² along y-axis.
         dynamicsWorld->setGravity(btVector3(0, 1, 0));
@@ -45,6 +55,8 @@ int main(int argc, char** argv) {
 		boost::shared_ptr<btDefaultMotionState> groundMotionState(new btDefaultMotionState(groundTransform));
         btRigidBody::btRigidBodyConstructionInfo ground_rbInfo(0, groundMotionState.get(), groundShape.get(), btVector3(0, 0, 0));
 		boost::shared_ptr<btRigidBody> ground_body(new btRigidBody(ground_rbInfo));
+		ground_body->setLinearFactor(btVector3(1,1,0));
+		ground_body->setAngularFactor(btVector3(0,0,1));
         // Add the body to the dynamics world.
         dynamicsWorld->addRigidBody(ground_body.get());
 
@@ -53,6 +65,8 @@ int main(int argc, char** argv) {
 		boost::shared_ptr<btDefaultMotionState> leftWallMotionState(new btDefaultMotionState(leftWallTransform));
         btRigidBody::btRigidBodyConstructionInfo leftWall_rbInfo(0, leftWallMotionState.get(), groundShape.get(), btVector3(0, 0, 0));
 		boost::shared_ptr<btRigidBody> leftwall_body(new btRigidBody(leftWall_rbInfo));
+		leftwall_body->setLinearFactor(btVector3(1,1,0));
+		leftwall_body->setAngularFactor(btVector3(0,0,1));
         // Add the body to the dynamics world.
         dynamicsWorld->addRigidBody(leftwall_body.get());
 
@@ -61,6 +75,8 @@ int main(int argc, char** argv) {
 		boost::shared_ptr<btDefaultMotionState> rightWallMotionState(new btDefaultMotionState(rightWallTransform));
         btRigidBody::btRigidBodyConstructionInfo rightWall_rbInfo(0, rightWallMotionState.get(), groundShape.get(), btVector3(0, 0, 0));
 		boost::shared_ptr<btRigidBody> rightwall_body(new btRigidBody(rightWall_rbInfo));
+		rightwall_body->setLinearFactor(btVector3(1,1,0));
+		rightwall_body->setAngularFactor(btVector3(0,0,1));
         // Add the body to the dynamics world.
         dynamicsWorld->addRigidBody(rightwall_body.get());
 
@@ -69,6 +85,8 @@ int main(int argc, char** argv) {
 		boost::shared_ptr<btDefaultMotionState> topWallMotionState(new btDefaultMotionState(topWallTransform));
         btRigidBody::btRigidBodyConstructionInfo topWall_rbInfo(0, topWallMotionState.get(), groundShape.get(), btVector3(0, 0, 0));
 		boost::shared_ptr<btRigidBody> topwall_body(new btRigidBody(topWall_rbInfo));
+		topwall_body->setLinearFactor(btVector3(1,1,0));
+		topwall_body->setAngularFactor(btVector3(0,0,1));
         // Add the body to the dynamics world.
         dynamicsWorld->addRigidBody(topwall_body.get());
 
@@ -98,6 +116,8 @@ int main(int argc, char** argv) {
 		boost::shared_ptr<btDefaultMotionState> myMotionState(new btDefaultMotionState(startTransform));
         btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,myMotionState.get(),colShape.get(),localInertia);
 		boost::shared_ptr<btRigidBody> body(new btRigidBody(rbInfo));
+		body->setLinearFactor(btVector3(1,1,0));
+		body->setAngularFactor(btVector3(0,0,1));
 
         dynamicsWorld->addRigidBody(body.get());
 
