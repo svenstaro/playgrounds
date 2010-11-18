@@ -132,6 +132,7 @@ int main(int argc, char** argv) {
 			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass,&(motionstate_list.back()),colShape.get(),localInertia));
 			lol->setLinearFactor(btVector3(1,1,0));
 			lol->setAngularFactor(btVector3(0,0,1));
+            body_list.push_back(lol);
 		}
 		BOOST_FOREACH (btRigidBody& body, body_list) {
 			dynamicsWorld->addRigidBody(&body);
