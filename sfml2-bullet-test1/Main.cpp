@@ -3,6 +3,7 @@
 #include "Definitions.hpp"
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
 
@@ -140,16 +141,23 @@ int main(int argc, char** argv) {
 
 /// Do some simulation
 		sf::Event sfmlEvent;
+		sf::Clock mClock;
+		sf::Text mText;
 
         while(RenderWin->IsOpened()) {
-		while(RenderWin->GetEvent(sfmlEvent)) {
-			if(sfmlEvent.Type == sf::Event::Closed) 
-				RenderWin->Close();
-			if(sfmlEvent.Type == sf::Event::KeyPressed) {
-				if(sfmlEvent.Key.Code == sf::Key::Escape) 
+			while(RenderWin->GetEvent(sfmlEvent)) {
+				if(sfmlEvent.Type == sf::Event::Closed) 
 					RenderWin->Close();
+				if(sfmlEvent.Type == sf::Event::KeyPressed) {
+					if(sfmlEvent.Key.Code == sf::Key::Escape) 
+						RenderWin->Close();
+				}
 			}
-		}
+
+			float time_delta = mClock.GetElapsedTime();
+			mClock.Reset();
+
+
 			// SFML access class for real-time input
 			const sf::Input& input = RenderWin->GetInput();
 			// get the current "frame time" (seconds elapsed since the previous frame, hopefully close to 1/60 since vsync is enabled)
@@ -225,6 +233,10 @@ int main(int argc, char** argv) {
 
                 //have Bullet use our debug drawing class to render the world
                 dynamicsWorld->debugDrawWorld();
+
+				mText = sf::Text(boost::lexical_cast<std::string>(1.f/time_delta));
+				mText.SetPosition(5,5);
+				RenderWin->Draw(mText);
 
                 RenderWin->Display();
         }
