@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/ptr_container/ptr_list.hpp>
 
 int main(int argc, char** argv) {
         sf::RenderWindow* RenderWin = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT, 32), "lol test");
@@ -120,6 +121,21 @@ int main(int argc, char** argv) {
 		body->setAngularFactor(btVector3(0,0,1));
 
         dynamicsWorld->addRigidBody(body.get());
+
+		// Create lulz
+		boost::ptr_list<btRigidBody> body_list;
+		boost::ptr_list<btDefaultMotionState> motionstate_list;
+		for (int i=0;i <= 10; ++i) {
+			startTransform.setIdentity();
+			startTransform.setOrigin(btVector3(i,i,0));
+			motionstate_list.push_back(new btDefaultMotionState(startTransform));
+			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass,&(motionstate_list.back()),colShape.get(),localInertia));
+			lol->setLinearFactor(btVector3(1,1,0));
+			lol->setAngularFactor(btVector3(0,0,1));
+		}
+		BOOST_FOREACH (btRigidBody& body, body_list) {
+			dynamicsWorld->addRigidBody(&body);
+		}
 
 /// Do some simulation
 		sf::Event sfmlEvent;
