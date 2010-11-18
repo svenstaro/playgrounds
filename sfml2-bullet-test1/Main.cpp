@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
         // Create dynamic rigid body.
 
         //btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
-		boost::shared_ptr<btCollisionShape> colShape(new btSphereShape(btScalar(1.)));
+		boost::shared_ptr<btCollisionShape> colShape(new btSphereShape(btScalar(0.6)));
         collisionShapes.push_back(colShape.get());
 
         /// Create Dynamic Objects
@@ -161,7 +161,7 @@ int main(int argc, char** argv) {
 			dynamicsWorld->clearForces();
 
 			//check for user keyboard input to control Bullet forces/torques/etc
-			float mag = 500.0f;
+			float mag = 1000.0f;
 			if(input.IsKeyDown(sf::Key::Left))
 				body->applyForce(btVector3(-mag*frameTime, 0.0f, 0), body->getCenterOfMassPosition());
 			if(input.IsKeyDown(sf::Key::Right)) 
@@ -175,12 +175,12 @@ int main(int argc, char** argv) {
 			if(input.IsKeyDown(sf::Key::E)) 
 				body->applyTorque(btVector3(-mag/2*frameTime, 0, 0));
 
-			/*// apply random forces to all the small bodies created earlier
+			// apply random forces to all the small bodies created earlier
 			if(input.IsKeyDown(sf::Key::Space)) {
-				for (sf::Uint32 i=0; i<smallBodyList.size(); i++) {
-					smallBodyList[i]->applyForce(btVector3(mag/100*(10-rand()%20), mag/100*(10-rand()%20), 0), smallBodyList[i]->getCenterOfMassPosition());
-				}
-			}*/
+                BOOST_FOREACH (btRigidBody& body, body_list) {
+				    body.applyForce(btVector3(mag/100*(10-rand()%20), mag/100*(10-rand()%20), 0), body.getCenterOfMassPosition());
+                }
+			}
 
 			if(input.IsKeyDown(sf::Key::W)) {
 				// make a new gravity vector
