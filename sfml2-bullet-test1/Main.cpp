@@ -3,6 +3,7 @@
 #include "Definitions.hpp"
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
 
@@ -111,7 +112,7 @@ int main(int argc, char** argv) {
         if (isDynamic)
                 colShape->calculateLocalInertia(mass,localInertia);
 
-        startTransform.setOrigin(btVector3(5, 5, 0));
+        startTransform.setOrigin(btVector3(2, 5, 0));
 
         //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 		boost::shared_ptr<btDefaultMotionState> myMotionState(new btDefaultMotionState(startTransform));
@@ -125,11 +126,19 @@ int main(int argc, char** argv) {
 		// Create lulz
 		boost::ptr_list<btRigidBody> body_list;
 		boost::ptr_list<btDefaultMotionState> motionstate_list;
+		boost::ptr_list<btCollisionShape> colshape_list;
 		for (int i=0;i <= 10; ++i) {
+			if (i < 5)
+				colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f,0.8f))));
+			else
+				colshape_list.push_back(new btBoxShape(btVector3(sf::Randomizer::Random(0.1f,0.8f),sf::Randomizer::Random(0.1f,0.8f),0)));
+			if (isDynamic)
+                colshape_list.back().calculateLocalInertia(mass,localInertia);
+			collisionShapes.push_back(&(colshape_list.back()));
 			startTransform.setIdentity();
 			startTransform.setOrigin(btVector3(i,i,0));
 			motionstate_list.push_back(new btDefaultMotionState(startTransform));
-			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass,&(motionstate_list.back()),colShape.get(),localInertia));
+			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass,&(motionstate_list.back()),&(colshape_list.back()),localInertia));
 			lol->setLinearFactor(btVector3(1,1,0));
 			lol->setAngularFactor(btVector3(0,0,1));
             body_list.push_back(lol);
@@ -140,16 +149,23 @@ int main(int argc, char** argv) {
 
 /// Do some simulation
 		sf::Event sfmlEvent;
+		sf::Clock mClock;
+		sf::Text mText;
 
         while(RenderWin->IsOpened()) {
-		while(RenderWin->GetEvent(sfmlEvent)) {
-			if(sfmlEvent.Type == sf::Event::Closed) 
-				RenderWin->Close();
-			if(sfmlEvent.Type == sf::Event::KeyPressed) {
-				if(sfmlEvent.Key.Code == sf::Key::Escape) 
+			while(RenderWin->GetEvent(sfmlEvent)) {
+				if(sfmlEvent.Type == sf::Event::Closed) 
 					RenderWin->Close();
+				if(sfmlEvent.Type == sf::Event::KeyPressed) {
+					if(sfmlEvent.Key.Code == sf::Key::Escape) 
+						RenderWin->Close();
+				}
 			}
-		}
+
+			float time_delta = mClock.GetElapsedTime();
+			mClock.Reset();
+
+
 			// SFML access class for real-time input
 			const sf::Input& input = RenderWin->GetInput();
 			// get the current "frame time" (seconds elapsed since the previous frame, hopefully close to 1/60 since vsync is enabled)
@@ -225,6 +241,10 @@ int main(int argc, char** argv) {
 
                 //have Bullet use our debug drawing class to render the world
                 dynamicsWorld->debugDrawWorld();
+
+				mText = sf::Text(boost::lexical_cast<std::string>(1.f/time_delta));
+				mText.SetPosition(5,5);
+				RenderWin->Draw(mText);
 
                 RenderWin->Display();
         }
