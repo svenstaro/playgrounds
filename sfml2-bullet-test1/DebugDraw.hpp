@@ -1,7 +1,9 @@
 #ifndef DEBUGDRAW_HPP
 #define DEBUGDRAW_HPP
 
-#include "GlobalInclude.hpp"
+#include <SFML/Graphics.hpp>
+#include <bullet/btBulletDynamicsCommon.h>
+#include <iostream>
 
 //a Box2D debug drawing class for simple rendering of physics objects
 class DebugDraw : public btIDebugDraw

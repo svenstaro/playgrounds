@@ -1,11 +1,19 @@
-#include "btBulletDynamicsCommon.h"
 #include "DebugDraw.hpp"
 #include "Definitions.hpp"
+
 #include <SFML/Graphics.hpp>
-#include <stdio.h>
+#include <bullet/btBulletDynamicsCommon.h>
+#include <BulletCollision/CollisionShapes/btBox2dShape.h>
+#include <BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.h>
+#include <BulletCollision/CollisionDispatch/btBox2dBox2dCollisionAlgorithm.h>
+#include <BulletCollision/CollisionDispatch/btConvex2dConvex2dAlgorithm.h>
+#include <BulletCollision/CollisionShapes/btConvex2dShape.h>
+#include <BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h>
+#include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
+#include <boost/foreach.hpp>
 
 int main(int argc, char** argv) {
         sf::RenderWindow* RenderWin = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT, 32), "lol test");
