@@ -112,6 +112,7 @@ int main(int argc, char** argv) {
         startTransform.setIdentity();
 
         btScalar mass(1.f);
+        btScalar small_mass(0.1f);
 
         //rigidbody is dynamic if and only if mass is non zero, otherwise static
         bool isDynamic = (mass != 0.f);
@@ -135,18 +136,19 @@ int main(int argc, char** argv) {
 		boost::ptr_list<btRigidBody> body_list;
 		boost::ptr_list<btDefaultMotionState> motionstate_list;
 		boost::ptr_list<btCollisionShape> colshape_list;
-		for (int i=0;i <= 10; ++i) {
-			if (i < 5)
-				colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f, 0.8f))));
+        int count = 50;
+		for (int i=0;i <= count; ++i) {
+			if (i < count / 2)
+				colshape_list.push_back(new btSphereShape(btScalar(sf::Randomizer::Random(0.1f, 0.1f))));
 			else
-				colshape_list.push_back(new btBoxShape(btVector3(sf::Randomizer::Random(0.1f,0.8f), sf::Randomizer::Random(0.1f,0.8f), 10)));
+				colshape_list.push_back(new btBoxShape(btVector3(sf::Randomizer::Random(0.1f,0.1f), sf::Randomizer::Random(0.1f,0.3f), 10)));
 			if (isDynamic)
-                colshape_list.back().calculateLocalInertia(mass,localInertia);
+                colshape_list.back().calculateLocalInertia(small_mass,localInertia);
 			collisionShapes.push_back(&(colshape_list.back()));
 			startTransform.setIdentity();
-			startTransform.setOrigin(btVector3(i,i,0));
+			startTransform.setOrigin(btVector3(i*0.01,i*0.01,0));
 			motionstate_list.push_back(new btDefaultMotionState(startTransform));
-			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass,&(motionstate_list.back()),&(colshape_list.back()),localInertia));
+			btRigidBody* lol = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(small_mass,&(motionstate_list.back()),&(colshape_list.back()),localInertia));
 			lol->setLinearFactor(btVector3(1,1,0));
 			lol->setAngularFactor(btVector3(0,0,1));
             body_list.push_back(lol);
@@ -185,7 +187,7 @@ int main(int argc, char** argv) {
 			dynamicsWorld->clearForces();
 
 			//check for user keyboard input to control Bullet forces/torques/etc
-			float mag = 1000.0f;
+			float mag = 5000.0f;
 			if(input.IsKeyDown(sf::Key::Left))
 				body->applyForce(btVector3(-mag*frameTime, 0.0f, 0), body->getCenterOfMassPosition());
 			if(input.IsKeyDown(sf::Key::Right)) 
@@ -202,7 +204,7 @@ int main(int argc, char** argv) {
 			// apply random forces to all the small bodies created earlier
 			if(input.IsKeyDown(sf::Key::Space)) {
                 BOOST_FOREACH (btRigidBody& body, body_list) {
-				    body.applyForce(btVector3(mag/100*(10-rand()%20), mag/100*(10-rand()%20), 0), body.getCenterOfMassPosition());
+				    body.applyForce(btVector3((10-rand()%20), (10-rand()%20), 0), body.getCenterOfMassPosition());
                 }
 			}
 
